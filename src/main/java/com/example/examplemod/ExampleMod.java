@@ -1,0 +1,49 @@
+package com.example.examplemod;
+
+import com.example.examplemod.Utils.GuiHighlightUtils;
+import com.example.examplemod.features.dungeon.DungeonProfitCalc;
+import com.example.examplemod.features.experimentation.ExperimentTable;
+import com.example.examplemod.features.magmarodhelper.RodCombining;
+import com.example.examplemod.prices.HypixelBazaarAPI;
+import net.minecraft.init.Blocks;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+
+@Mod(modid = ExampleMod.MODID, version = ExampleMod.VERSION)
+public class ExampleMod
+{
+    public static final String MODID = "examplemod";
+    public static final String VERSION = "1.0";
+
+    @EventHandler
+    public void init(FMLInitializationEvent event)
+    {
+		// some example code
+        FMLCommonHandler.instance().bus().register(this);
+        MinecraftForge.EVENT_BUS.register(this);
+        System.out.println("DIRT BLOCK >> "+Blocks.dirt.getUnlocalizedName());
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(() -> HypixelBazaarAPI.fetchBazaarData(), 0, 5, TimeUnit.MINUTES);
+    }
+
+    @SubscribeEvent
+    public void onRenderInventory(GuiScreenEvent.DrawScreenEvent.Post event)
+    {
+        GuiHighlightUtils e = new GuiHighlightUtils(event);
+
+        RodCombining.findRod(e);
+        DungeonProfitCalc.chestCalc(e);
+        ExperimentTable.highlightDye(event);
+    }
+
+}
