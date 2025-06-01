@@ -1,4 +1,4 @@
-package com.example.examplemod.prices;
+package net.roblecks.dungeonchestmod.prices;
 
 import com.google.gson.*;
 import java.util.*;
@@ -8,6 +8,8 @@ public class PriceManager {
     private static final Map<String, Double> lowestBinPrices = new HashMap<>();
     private static final Map<String, Double> bazaarPrices = new HashMap<>();
 
+
+    //Updates bazaar and AH prices.
     public static void refreshPrices(JsonObject bazaarData, List<JsonObject> auctionPages) {
         updateBazaarPrices(bazaarData);
         updateLowestBinPrices(auctionPages);
@@ -65,7 +67,6 @@ public class PriceManager {
         return bazaarPrices.getOrDefault(itemId, -1.0);
     }
 
-    // Optional: for debugging
     public static void printPriceSummary() {
         System.out.println("Bazaar prices: " + bazaarPrices.size());
         System.out.println("Lowest BINs: " + lowestBinPrices.size());

@@ -1,4 +1,4 @@
-package com.example.examplemod.Utils;
+package net.roblecks.dungeonchestmod.Utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

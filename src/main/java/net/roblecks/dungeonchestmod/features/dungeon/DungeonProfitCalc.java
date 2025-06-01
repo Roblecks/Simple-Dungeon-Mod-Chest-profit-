@@ -1,17 +1,14 @@
-package com.example.examplemod.features.dungeon;
+package net.roblecks.dungeonchestmod.features.dungeon;
 
-import com.example.examplemod.Utils.GuiHighlightUtils;
-import com.example.examplemod.prices.PriceManager;
-import com.example.examplemod.Utils.RodUtils;
+import net.roblecks.dungeonchestmod.Utils.GuiHighlightUtils;
+import net.roblecks.dungeonchestmod.prices.PriceManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import com.example.examplemod.prices.HypixelBazaarAPI;
+import net.roblecks.dungeonchestmod.prices.HypixelBazaarAPI;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -19,19 +16,22 @@ import java.util.Map;
 public class DungeonProfitCalc
 {
 
+    //Highlights the dungeon chest with the most profit.
     public static void chestCalc(GuiHighlightUtils guiObj) {
         if (guiObj.container !=null) {
 
+            //Searches to see if the chest name is the name where chests are displayed. If so, continue.
             String chestName = guiObj.container.getLowerChestInventory().getDisplayName().getUnformattedText();
             if (chestName.toLowerCase().contains("the catacombs -")) {
 
+                //Arrays for the chests IE: Wood, Gold, Diamond...
                 ArrayList<ItemStack> chestList = new ArrayList<ItemStack>();
+                //Array that stores the value of the chest.
                 double[] itemCount = {0, 0, 0, 0, 0, 0, 0};
                 ArrayList<Slot> slotList = new ArrayList<Slot>();
-
                 Map<String, String> map = HypixelBazaarAPI.createBzMap();
 
-                //Adds each slot object that is a loot chest to an array.
+                //Adds each slot object that is a loot chest to chestList and its slot.
                 for (Slot slot : guiObj.container.inventorySlots) {
                     ItemStack stack = slot.getStack();
                     if (stack != null && stack.getDisplayName().toLowerCase().contains("chest") && !stack.getDisplayName().toLowerCase().contains("plate")) {
@@ -40,7 +40,7 @@ public class DungeonProfitCalc
                     }
                 }
 
-                //Loops through each item in the loot chest array
+                //Loops through each item in the chestList array
                 for (int i = 0; i < chestList.size(); i++)
                 {
                     if (chestList.get(i) == null || !chestList.get(i).hasTagCompound()) return;
@@ -80,23 +80,16 @@ public class DungeonProfitCalc
                     } catch (IndexOutOfBoundsException e) {
 
                     }
+                    //Displays string in the top left for the expected profit.
                     if (profitItem != null) {
                         String profit;
                         guiObj.drawGuiHighlight(profitItem,0, 200, 0);
                         if (largestAmount > 1000000){
-                            profit = String.format("%.1fm", largestAmount/ 1000000); // e.g., "127.3m"
+                            profit = String.format("%.1fm", largestAmount/ 1000000); // e.g., "100m"
                         } else {
-                            profit = String.format("%.1fk", largestAmount / 1000); // e.g., "127.3k"
+                            profit = String.format("%.1fk", largestAmount / 1000); // e.g., "100k"
                         }
-                        Minecraft.getMinecraft().fontRendererObj.drawString(
-                                profit,
-                                0,
-                                10, // draw above chest
-                                0xFFFF00, // yellow text
-                                true // drop shadow
-                        );
-
-                        //drawHighlight(chest.guiLeft + profitItem.xDisplayPosition, chest.guiTop + profitItem.yDisplayPosition, 0, 200, 0);
+                        Minecraft.getMinecraft().fontRendererObj.drawString(profit, 0, 10, 0xFFFF00, true);
                     }
                 }
 
@@ -106,20 +99,6 @@ public class DungeonProfitCalc
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private static double getChestDataFromNBT(String cleanLine, Map<String, String> map){
 
@@ -149,31 +128,25 @@ public class DungeonProfitCalc
             String[] splitLine = cleanLine.split(" ");
             //Turns splitLine into [Undead Essence, Essence, x26]
             essenceType = splitLine[0].concat(" " + splitLine[1]);
-
-            //Essence Amount = the number directly after "x"
-            //essenceAmount = Integer.valueOf(splitLine[2].replace("x", ""));
             essenceAmount = Integer.valueOf(splitLine[2].replace("x", ""));
 
-            //WORKS!!
             if (map.containsKey(essenceType))
             {
                 bazaarId = map.get(essenceType);
-
                 sellPrice = HypixelBazaarAPI.getSellPrice(bazaarId)*essenceAmount;
 
-                //RodUtils.sendClientMessage(sellPrice);
             }
         } else if(map.containsKey(cleanLine)){
             bazaarId = map.get(cleanLine);
             sellPrice = HypixelBazaarAPI.getSellPrice(bazaarId);
+
+            //Gets the cost to open price.
         } else if(cleanLine.contains("Coins")){
             String numToInt;
             numToInt = cleanLine.replace("Coins", "").replace(",", "").trim();
             sellPrice = -(Integer.valueOf(numToInt));
 
         } else{
-
-            RodUtils.sendClientMessage(PriceManager.getLowestBinPrice(cleanLine));
             sellPrice = PriceManager.getLowestBinPrice(cleanLine);
         }
         return sellPrice;

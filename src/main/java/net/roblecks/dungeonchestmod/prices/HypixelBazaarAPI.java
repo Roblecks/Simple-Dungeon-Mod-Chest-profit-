@@ -1,8 +1,5 @@
-package com.example.examplemod.prices;
+package net.roblecks.dungeonchestmod.prices;
 
-import com.example.examplemod.Utils.RodUtils;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -17,7 +14,7 @@ public class HypixelBazaarAPI {
 
     private static final String BAZAAR_URL = "https://api.hypixel.net/v2/skyblock/bazaar";
     private static final String AH_URL = "https://api.hypixel.net/v2/skyblock/auctions";
-    private static final long REFRESH_INTERVAL = 5 * 60 * 1000*2*3; // 5 minutes
+    private static final long REFRESH_INTERVAL = 5 * 60 * 1000*2*3; // 30 minutes
     private static long lastFetchTime = 0;
     public static JsonObject bazaarData = null;
     public static JsonObject ahInfo = null;
@@ -56,53 +53,12 @@ public class HypixelBazaarAPI {
     }
 
 
-    public static ArrayList<JsonObject> getAhData(){
-        return ahData;
-    }
-
-
     public static double getSellPrice(String bazaarId){
         JsonObject products = bazaarData.getAsJsonObject("products");
         JsonObject itemId = products.getAsJsonObject(bazaarId);
         JsonObject quickStatus = itemId.getAsJsonObject("quick_status");
 
         return quickStatus.get("buyPrice").getAsDouble();
-    }
-
-
-    public static double getAverageLowestBin(String itemNameToSearch) {
-
-        ArrayList<Long> prices = new ArrayList<>();
-
-        if (ahData == null || ahData.isEmpty()) {
-            RodUtils.sendClientMessage("ahData failed to load");
-            return -1;
-        }
-        for (JsonObject page : ahData) {
-            JsonArray auctions = page.getAsJsonArray("auctions");
-
-            for (JsonElement auctionElement : auctions) {
-                JsonObject auction = auctionElement.getAsJsonObject();
-
-                String itemName = auction.get("item_name").getAsString();
-                boolean isBin = auction.has("bin") && auction.get("bin").getAsBoolean();
-
-                if (isBin && itemName.equalsIgnoreCase(itemNameToSearch)) {
-                    long price = auction.get("starting_bid").getAsLong();
-                    prices.add(price);
-                }
-            }
-        }
-        prices.sort(Comparator.naturalOrder());
-        int count = Math.min(5, prices.size());
-        if(count == 0) return 0;
-
-        long total = 0;
-        for (int i = 0; i < count; i++){
-            total += prices.get(i);
-        }
-
-        return total / (double) count;
     }
 
 

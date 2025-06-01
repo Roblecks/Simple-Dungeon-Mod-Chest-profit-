@@ -1,4 +1,4 @@
-package com.example.examplemod.features.experimentation;
+package net.roblecks.dungeonchestmod.features.experimentation;
 
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;

@@ -1,10 +1,7 @@
-package com.example.examplemod;
+package net.roblecks.dungeonchestmod;
 
-import com.example.examplemod.Utils.GuiHighlightUtils;
-import com.example.examplemod.features.dungeon.DungeonProfitCalc;
-import com.example.examplemod.features.experimentation.ExperimentTable;
-import com.example.examplemod.features.magmarodhelper.RodCombining;
-import com.example.examplemod.prices.HypixelBazaarAPI;
+import net.roblecks.dungeonchestmod.Utils.GuiHighlightUtils;
+import net.roblecks.dungeonchestmod.features.dungeon.DungeonProfitCalc;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -13,16 +10,19 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.roblecks.dungeonchestmod.features.experimentation.ExperimentTable;
+import net.roblecks.dungeonchestmod.features.magmarodhelper.RodCombining;
+import net.roblecks.dungeonchestmod.prices.HypixelBazaarAPI;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-@Mod(modid = ExampleMod.MODID, version = ExampleMod.VERSION)
-public class ExampleMod
+@Mod(modid = DungeonChestMod.MODID, version = DungeonChestMod.VERSION)
+public class DungeonChestMod
 {
-    public static final String MODID = "examplemod";
+    public static final String MODID = "dungeonchestmod";
     public static final String VERSION = "1.0";
 
     @EventHandler
