@@ -21,7 +21,7 @@ public class HypixelBazaarAPI {
     public static ArrayList<JsonObject> ahData = null;
     public static List<JsonObject> ahPages;
 
-    //Runs every five minutes
+    //Runs every thirty minutes
     public static void fetchBazaarData(){
 
                 ahData = new ArrayList<>();
