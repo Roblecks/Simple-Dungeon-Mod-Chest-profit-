@@ -107,20 +107,6 @@ public class DungeonProfitCalc
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private static double getChestDataFromNBT(String cleanLine, Map<String, String> map){
 
         if (cleanLine == null) return -1;
